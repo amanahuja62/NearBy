@@ -119,6 +119,22 @@ public class SignUpActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void makeEditTextNonEditable(){
+        e1.setEnabled(false);
+        e2.setEnabled(false);
+        e3.setEnabled(false);
+        e4.setEnabled(false);
+        e6.setEnabled(false);
+
+    }
+    private void makeEditTextEditable(){
+        e1.setEnabled(true);
+        e2.setEnabled(true);
+        e3.setEnabled(true);
+        e4.setEnabled(true);
+        e6.setEnabled(true);
+    }
+
     private void createUser() {
         String username, email, password, name , address, phone;
         phone = null;
@@ -127,6 +143,7 @@ public class SignUpActivity extends AppCompatActivity {
         email = e4.getText().toString();
         name = e1.getText().toString();
         password = e2.getText().toString();
+        makeEditTextNonEditable();
 
         loadingPB.setVisibility(View.VISIBLE);
         User user = new User(username, name, email, password, phone, address);
@@ -138,24 +155,19 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Code :" + response.code(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-               Toast.makeText(SignUpActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();
+              /* Toast.makeText(SignUpActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();*/
                 loadingPB.setVisibility(View.GONE);
-
-
                 User userPostResponse = response.body();
-                String s;
-                if(userPostResponse != null)
-                    s = "Response Code : " + response.code() + "\nName : " + userPostResponse.getName() + "\n" + "Email : " + userPostResponse.getEmail();
-
-                else{
-                    s = "User already registered !!";
-                }
+                String s = "Response Code : " + response.code() + "\nName : " + userPostResponse.getName() + "\n" + "Email : " + userPostResponse.getEmail();
                 Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                loadingPB.setVisibility(View.GONE);
+                makeEditTextEditable();
+                Toast.makeText(SignUpActivity.this, "You have already logged in with same user name or email id !!", Toast.LENGTH_SHORT).show();
 
             }
         });
