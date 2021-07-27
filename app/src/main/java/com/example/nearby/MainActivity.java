@@ -67,29 +67,47 @@ public class MainActivity extends AppCompatActivity {
 
     private void validateCredentials(String user, String userPass){
         LoginData loginData = new LoginData(user, userPass);
+         progressBar.setVisibility(View.VISIBLE);
+
 
 
         //first trying to post the credentials as user data in login-user api
 
-        Call<LoginData> call = loginAPI.postUserData(loginData);
+        Call<LoginData> call = loginAPI.postAdminData(loginData);
         call.enqueue(new Callback<LoginData>() {
             @Override
             public void onResponse(Call<LoginData> call, Response<LoginData> response) {
-                LoginData loginData1 = response.body();
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Login successful !!" + loginData1.getUsername(), Toast.LENGTH_SHORT).show();
+                LoginData loginData1 = response.body();
+                if(loginData != null) {
+                    Toast.makeText(MainActivity.this, "Welcome Admin !! " + loginData1.getUsername(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this,AdminPanel.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                    username.setEnabled(true);
+                    password.setEnabled(true);
+                }
 
             }
 
             @Override
             public void onFailure(Call<LoginData> call, Throwable t) {
-                Call<LoginData> call2 = loginAPI.postAdminData(loginData);
+                Call<LoginData> call2 = loginAPI.postUserData(loginData);
                 call2.enqueue(new Callback<LoginData>() {
                     @Override
                     public void onResponse(Call<LoginData> call, Response<LoginData> response) {
                         LoginData loginData1 = response.body();
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(MainActivity.this, "Login successful !!" + loginData1.getUsername(), Toast.LENGTH_SHORT).show();
+
+                        if(loginData1 != null)
+                        Toast.makeText(MainActivity.this, "Login Successful !!" + loginData1.getUsername(), Toast.LENGTH_SHORT).show();
+                        else {
+                            Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                            username.setEnabled(true);
+                            password.setEnabled(true);
+                        }
 
                     }
 
