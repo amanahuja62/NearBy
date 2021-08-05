@@ -20,6 +20,7 @@
     <string name="app_version">Version</string>
     <string name="default_notification_channel_id">Default</string>
     <string name="webview_loading">Load Content... </string>
+    <string name="Rs">\u20B9</string>
     <string name="imageurl">https://as2.ftcdn.net/v2/jpg/00/63/83/29/1000_F_63832924_PE0b9gQltaKya7t6mIQLWat5ob0KcuXr.jpg</string>
 
 </resources>

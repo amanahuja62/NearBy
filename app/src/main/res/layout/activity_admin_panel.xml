@@ -30,6 +30,8 @@
             app:fontFamily="sans-serif-medium" />
 
         <ImageButton
+            android:id="@+id/adminSubmit"
+            android:onClick="adminSubmit"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -69,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_middle"
+                android:id="@+id/linearLayout"
                 android:background="@drawable/edit_text_round_bg_outline"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -80,6 +83,7 @@
                     android:background="@color/overlay_light_20">
 
                     <ImageView
+                        android:id="@+id/image"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_centerInParent="true"
@@ -92,6 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:id="@+id/textview"
                     android:text="Add Coupon"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/grey_20" />
@@ -128,6 +133,8 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
+                            android:id="@+id/offerName"
+                            android:textColor="@color/overlay_light_60"
                             android:background="@drawable/edit_text_round_bg_outline"
                             android:hint="Ex. Flat 20% off"
                             android:textColorHint="@color/overlay_light_40" />
@@ -160,12 +167,42 @@
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:background="@drawable/edit_text_round_bg_outline"
+                            android:id="@+id/shopName"
+                            android:textColor="@color/overlay_light_60"
                             android:hint="Gupta Medicos"
                             android:textColorHint="@color/overlay_light_40" />
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_mlarge"
+                android:text="Price (in Rupees)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/overlay_light_60" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_middle"
+                android:background="@color/overlay_dark_10"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_round_bg_outline"
+                    android:gravity="start"
+                    android:id="@+id/offerPrice"
+                    android:textColor="@color/overlay_light_60"
+                    android:hint="Rs 1000"
+
+                    android:inputType="number"
+                    android:textColorHint="@color/overlay_light_40" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -199,8 +236,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:layout_weight="1"
+                            android:id="@+id/city"
                             android:background="@drawable/edit_text_round_bg_outline"
                             android:hint="Ex. Bathinda"
+                            android:textColor="@color/overlay_light_60"
                             android:textColorHint="@color/overlay_light_40" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -232,6 +271,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
                             android:layout_weight="1"
+                            android:id="@+id/area"
+                            android:textColor="@color/overlay_light_60"
                             android:background="@drawable/edit_text_round_bg_outline"
                             android:hint="Ex. GT Road"
                             android:textColorHint="@color/overlay_light_40" />
@@ -269,8 +310,10 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
+                            android:id="@+id/couponCode"
                             android:background="@drawable/edit_text_round_bg_outline"
                             android:hint="Ex. GMEDICOS20"
+                            android:textColor="@color/overlay_light_60"
                             android:textColorHint="@color/overlay_light_40" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -302,6 +345,8 @@
                             android:layout_height="35dp"
                             android:background="@drawable/edit_text_round_bg_outline"
                             android:hint="Ex. 10"
+                            android:textColor="@color/overlay_light_60"
+                            android:id="@+id/count"
                             android:inputType="number"
                             android:textColorHint="@color/overlay_light_40" />
 
@@ -330,43 +375,14 @@
                     android:layout_height="70dp"
                     android:background="@drawable/edit_text_round_bg_outline"
                     android:gravity="start"
+                    android:id="@+id/offerDescription"
+                    android:textColor="@color/overlay_light_60"
                     android:hint="@string/medium_lorem_ipsum"
                     android:inputType="textMultiLine"
                     android:lines="4"
                     android:textColorHint="@color/overlay_light_40" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_mlarge"
-                android:text="Image URL"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/overlay_light_60" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_middle"
-                android:background="@color/overlay_dark_10"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_round_bg_outline"
-                    android:gravity="start"
-                    android:hint="@string/imageurl"
-                    android:inputType="textMultiLine"
-                    android:lines="4"
-                    android:textColorHint="@color/overlay_light_40" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
 
 
 

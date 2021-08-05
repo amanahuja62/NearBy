@@ -1,4 +1,4 @@
-package com.example.nearby;
+package com.example.nearby.model;
 
 public class LoginData {
     String username;
