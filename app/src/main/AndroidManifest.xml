@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -13,11 +15,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AdminPanel"></activity>
         <activity
-            android:name=".SignUpActivity"
+            android:name=".admin.UploadedImageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".admin.CouponRegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".user.offer.UserOfferDetails"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".admin.AdminMainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".user.offer.MainOfferActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".user.login.SignUpActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".user.login.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

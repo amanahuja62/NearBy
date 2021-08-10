@@ -1,6 +1,8 @@
-package com.example.nearby;
+package com.example.nearby.user.login;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +12,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.nearby.R;
+import com.example.nearby.RegisterUserAPI;
+import com.example.nearby.user.offer.MainOfferActivity;
+import com.example.nearby.utils.Tools;
+import com.example.nearby.model.User;
+import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -151,15 +160,21 @@ public class SignUpActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(SignUpActivity.this, "Code :" + response.code(), Toast.LENGTH_SHORT).show();
+
+                if(response.code()!=200 || (!response.isSuccessful())){
+                    Toast.makeText(SignUpActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     return;
                 }
+
               /* Toast.makeText(SignUpActivity.this, "Data added to API", Toast.LENGTH_SHORT).show();*/
                 loadingPB.setVisibility(View.GONE);
                 User userPostResponse = response.body();
-                String s = "Response Code : " + response.code() + "\nName : " + userPostResponse.getName() + "\n" + "Email : " + userPostResponse.getEmail();
-                Toast.makeText(SignUpActivity.this, s, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SignUpActivity.this, MainOfferActivity.class);
+                intent.putExtra("userDetails",userPostResponse);
+                startActivity(intent);
+                finish();
+
+
 
             }
 
@@ -167,7 +182,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onFailure(Call<User> call, Throwable t) {
                 loadingPB.setVisibility(View.GONE);
                 makeEditTextEditable();
-                Toast.makeText(SignUpActivity.this, "You have already logged in with same user name or email id !!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });

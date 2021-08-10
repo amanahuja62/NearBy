@@ -1,12 +1,15 @@
-package com.example.nearby;
+package com.example.nearby.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     String username;
     String name;
     String email;
     String password;
     String phone;
     String address;
+   long id;
 
     public User(String username, String name, String email, String password, String phone, String address) {
         this.username = username;
@@ -40,6 +43,11 @@ public class User {
     public String getName() {
         return name;
     }
+
+    public long getId() {
+        return id;
+    }
+
 }
 
 

@@ -1,4 +1,4 @@
-package com.example.nearby;
+package com.example.nearby.user.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.balysv.materialripple.MaterialRippleLayout;
+import com.example.nearby.LoginAPI;
+import com.example.nearby.admin.AdminMainActivity;
+import com.example.nearby.model.LoginData;
+import com.example.nearby.R;
+import com.example.nearby.admin.CouponRegisterActivity;
+import com.example.nearby.model.User;
+import com.example.nearby.user.offer.MainOfferActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
    LoginAPI loginAPI;
     ProgressBar progressBar;
    Button signin;
-   //hello
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 loginAPI = retrofit.create(LoginAPI.class);
-                username.setEnabled(false);
-                password.setEnabled(false);
+
                 progressBar.setVisibility(View.VISIBLE);
                 validateCredentials(s1,s2);
 
@@ -79,44 +88,54 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginData> call, Response<LoginData> response) {
                 progressBar.setVisibility(View.GONE);
+
+                if(response.code() != 200 || (!response.isSuccessful())){
+                    Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 LoginData loginData1 = response.body();
-                if(loginData != null) {
+                if(loginData1 != null) {
                     Toast.makeText(MainActivity.this, "Welcome Admin !! " + loginData1.getUsername(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this,AdminPanel.class);
+                    Intent intent = new Intent(MainActivity.this, AdminMainActivity.class);
                     startActivity(intent);
+
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
-                    username.setEnabled(true);
-                    password.setEnabled(true);
+
                 }
 
             }
 
             @Override
             public void onFailure(Call<LoginData> call, Throwable t) {
-                Call<LoginData> call2 = loginAPI.postUserData(loginData);
-                call2.enqueue(new Callback<LoginData>() {
+                Call<User> call2 = loginAPI.postUserData(loginData);
+                call2.enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Call<LoginData> call, Response<LoginData> response) {
-                        LoginData loginData1 = response.body();
+                    public void onResponse(Call<User> call, Response<User> response) {
                         progressBar.setVisibility(View.GONE);
-
-                        if(loginData1 != null)
-                        Toast.makeText(MainActivity.this, "Login Successful !!" + loginData1.getUsername(), Toast.LENGTH_SHORT).show();
-                        else {
-                            Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
-                            username.setEnabled(true);
-                            password.setEnabled(true);
+                        if(response.code()!=200 || (!response.isSuccessful())){
+                            Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            return;
                         }
+                        User user1 = response.body();
+
+                        if(user1 != null){
+                            Intent intent = new Intent(MainActivity.this, MainOfferActivity.class);
+                            intent.putExtra("userDetails",user1);
+                            startActivity(intent);
+
+                        }
+
+                        else
+                            Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
 
                     }
 
                     @Override
-                    public void onFailure(Call<LoginData> call, Throwable t) {
+                    public void onFailure(Call<User> call, Throwable t) {
                         Toast.makeText(MainActivity.this, "Invalid Credentials !!", Toast.LENGTH_SHORT).show();
-                        username.setEnabled(true);
-                        password.setEnabled(true);
+
                         progressBar.setVisibility(View.GONE);
                     }
                 });
