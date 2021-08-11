@@ -271,7 +271,6 @@ public class AdminMainActivity extends AppCompatActivity {
     }
     private void deletePreviouslyUploadedImage(String imageURL) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
         StorageReference ref = storage.getReferenceFromUrl(imageURL);
         ref.delete();
     }

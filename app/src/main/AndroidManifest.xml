@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".user.mycart.MyCartActivity"></activity>
         <activity
             android:name=".admin.UploadedImageActivity"
             android:exported="true" />
@@ -23,25 +25,27 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".user.offer.UserOfferDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".admin.AdminMainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".user.offer.MainOfferActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".user.login.SignUpActivity"
-            android:screenOrientation="portrait"></activity>
+
+            android:screenOrientation="portrait" />
+        <activity android:name=".user.offer.MyOffersActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".user.login.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
-</manifest>
+    </manifest>

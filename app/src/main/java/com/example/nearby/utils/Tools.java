@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.annotation.DrawableRes;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.storage.StorageReference;
 
 public class Tools {
 
@@ -43,19 +45,17 @@ public class Tools {
     }
     public static void displayImageOriginal(Context ctx, ImageView img, @DrawableRes int drawable) {
         try {
-            Glide.with(ctx).load(drawable)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+            Glide.with(ctx)
+                    .load(drawable)
                     .into(img);
         } catch (Exception e) {
         }
     }
     public static void displayImageOriginal(Context ctx, ImageView img, String url) {
         try {
+            Log.d("message",url);
             Glide.with(ctx).load(url)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(img);
+                           .into(img);
         } catch (Exception e) {
         }
     }
@@ -91,6 +91,9 @@ public class Tools {
         }
     }
 
+    public static void displayImageOriginal(Context ctx, StorageReference ref, ImageView image) {
+        Glide.with(ctx).load(ref).into(image);
+    }
 }
 
 

@@ -3,9 +3,11 @@ package com.example.nearby.user.offer;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,6 +35,7 @@ import com.example.nearby.adapter.UserOfferAdapter;
 import com.example.nearby.admin.AdminMainActivity;
 import com.example.nearby.model.Coupon;
 import com.example.nearby.model.User;
+import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
 import com.example.nearby.widget.SpacingItemDecoration;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
@@ -60,7 +63,9 @@ public class MainOfferActivity extends AppCompatActivity {
     EditText selectArea;
     MaterialRippleLayout materialRippleLayout;
     private DrawerLayout drawer;
+    SharedPreferences sp;
     ProgressDialog progressDialog;
+    SharedPreferences.Editor editor;
 
     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nearby-backend.herokuapp.com").
             addConverterFactory(GsonConverterFactory.create())
@@ -79,6 +84,8 @@ public class MainOfferActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_offer);
+        sp = getSharedPreferences("users",MODE_PRIVATE);
+        editor = sp.edit();
         user = getIntent().getParcelableExtra("userDetails");
         initToolbar();
         initComponent();
@@ -95,6 +102,8 @@ public class MainOfferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //open cart page
+                Intent intent = new Intent(MainOfferActivity.this, MyCartActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -441,6 +450,7 @@ public class MainOfferActivity extends AppCompatActivity {
     }
 
     public void signUserOut(View view) {
+        editor.putBoolean("logged",false).apply();
         finish();
     }
 
