@@ -1,5 +1,6 @@
 package com.example.nearby.user.offer;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import androidx.core.view.ViewCompat;
 
 import com.example.nearby.R;
 import com.example.nearby.model.Coupon;
+import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.transition.platform.MaterialContainerTransform;
@@ -107,7 +109,8 @@ public class UserOfferDetails extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             super.onBackPressed();
         } else {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this,MyCartActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

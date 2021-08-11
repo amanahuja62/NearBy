@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.nearby.R;
 import com.example.nearby.utils.Tools;
 import com.example.nearby.model.Coupon;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ import java.util.List;
 public class CouponAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Coupon> items = new ArrayList<>();
-
+    FirebaseStorage storage;
+    StorageReference ref;
     private Context ctx;
 
     @LayoutRes
@@ -39,7 +42,7 @@ public class CouponAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public CouponAdapter(Context context,  @LayoutRes int layout_id) {
-
+        storage = FirebaseStorage.getInstance();
         ctx = context;
         this.layout_id = layout_id;
     }
@@ -89,6 +92,7 @@ public class CouponAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             view.city.setText(n.getCity());
             view.area.setText(n.getArea());
+         /*   ref = storage.getReferenceFromUrl(n.getImage());*/
             Tools.displayImageOriginal(ctx, view.image, n.getImage());
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override

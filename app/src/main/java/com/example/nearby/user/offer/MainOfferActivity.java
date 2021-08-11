@@ -35,6 +35,7 @@ import com.example.nearby.adapter.UserOfferAdapter;
 import com.example.nearby.admin.AdminMainActivity;
 import com.example.nearby.model.Coupon;
 import com.example.nearby.model.User;
+import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
 import com.example.nearby.widget.SpacingItemDecoration;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
@@ -101,6 +102,8 @@ public class MainOfferActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //open cart page
+                Intent intent = new Intent(MainOfferActivity.this, MyCartActivity.class);
+                startActivity(intent);
             }
         });
 
