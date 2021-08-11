@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".user.mycart.MyCartActivity"></activity>
         <activity
             android:name=".admin.UploadedImageActivity"
             android:exported="true" />
@@ -23,16 +24,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".user.offer.UserOfferDetails"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".admin.AdminMainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".user.offer.MainOfferActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".user.login.SignUpActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".user.login.MainActivity"
             android:screenOrientation="portrait">
