@@ -3,9 +3,11 @@ package com.example.nearby.user.offer;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -60,7 +62,9 @@ public class MainOfferActivity extends AppCompatActivity {
     EditText selectArea;
     MaterialRippleLayout materialRippleLayout;
     private DrawerLayout drawer;
+    SharedPreferences sp;
     ProgressDialog progressDialog;
+    SharedPreferences.Editor editor;
 
     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nearby-backend.herokuapp.com").
             addConverterFactory(GsonConverterFactory.create())
@@ -79,6 +83,8 @@ public class MainOfferActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_offer);
+        sp = getSharedPreferences("users",MODE_PRIVATE);
+        editor = sp.edit();
         user = getIntent().getParcelableExtra("userDetails");
         initToolbar();
         initComponent();
@@ -441,6 +447,7 @@ public class MainOfferActivity extends AppCompatActivity {
     }
 
     public void signUserOut(View view) {
+        editor.putBoolean("logged",false).apply();
         finish();
     }
 
