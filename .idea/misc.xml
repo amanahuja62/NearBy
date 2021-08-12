@@ -14,14 +14,18 @@
         <entry key="..\:/NearBy/app/src/main/res/layout/activity_main.xml" value="0.17395833333333333" />
         <entry key="..\:/NearBy/app/src/main/res/layout/activity_main_offer.xml" value="0.18" />
         <entry key="..\:/NearBy/app/src/main/res/layout/activity_menu_drawer_filter.xml" value="0.25" />
+        <entry key="..\:/NearBy/app/src/main/res/layout/activity_my_offers.xml" value="0.18958333333333333" />
         <entry key="..\:/NearBy/app/src/main/res/layout/activity_shopping_cart_card.xml" value="0.18958333333333333" />
+        <entry key="..\:/NearBy/app/src/main/res/layout/activity_sign_up.xml" value="0.18958333333333333" />
         <entry key="..\:/NearBy/app/src/main/res/layout/activity_uploaded_image.xml" value="0.18958333333333333" />
+        <entry key="..\:/NearBy/app/src/main/res/layout/activity_user_myoffers.xml" value="0.18958333333333333" />
         <entry key="..\:/NearBy/app/src/main/res/layout/activity_user_offer_details.xml" value="0.22" />
         <entry key="..\:/NearBy/app/src/main/res/layout/indiv_my_offer.xml" value="0.22" />
         <entry key="..\:/NearBy/app/src/main/res/layout/indiv_user_offer.xml" value="0.33" />
         <entry key="..\:/NearBy/app/src/main/res/layout/item_music_card_album.xml" value="0.33" />
         <entry key="..\:/NearBy/app/src/main/res/layout/item_news_horizontal.xml" value="0.33" />
         <entry key="..\:/NearBy/app/src/main/res/layout/menu_cart_setting.xml" value="0.16510416666666666" />
+        <entry key="..\:/NearBy/app/src/main/res/layout/mycartactivity.xml" value="0.18958333333333333" />
         <entry key="..\:/NearBy/app/src/main/res/menu/ic_shopping_cart.xml" value="0.16510416666666666" />
         <entry key="..\:/NearBy/app/src/main/res/menu/menu_cart_setting.xml" value="0.16510416666666666" />
         <entry key="..\:/NearBy/app/src/main/res/menu/menu_done.xml" value="0.10740740740740741" />

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,20 +28,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.example.nearby.CartAPI;
 import com.example.nearby.CouponAPI;
 import com.example.nearby.R;
 import com.example.nearby.adapter.UserOfferAdapter;
-import com.example.nearby.admin.AdminMainActivity;
+import com.example.nearby.model.Cart;
 import com.example.nearby.model.Coupon;
 import com.example.nearby.model.User;
 import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
 import com.example.nearby.widget.SpacingItemDecoration;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +51,7 @@ public class MainOfferActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private UserOfferAdapter mAdapter;
-
+    CartAPI cartAPI;
     EditText selectCity;
     ListView areaListView;
     List<String> cityList = new ArrayList<>();
@@ -64,6 +62,7 @@ public class MainOfferActivity extends AppCompatActivity {
     MaterialRippleLayout materialRippleLayout;
     private DrawerLayout drawer;
     SharedPreferences sp;
+    Cart cart;
     ProgressDialog progressDialog;
     SharedPreferences.Editor editor;
 
@@ -86,7 +85,9 @@ public class MainOfferActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_offer);
         sp = getSharedPreferences("users",MODE_PRIVATE);
         editor = sp.edit();
-        user = getIntent().getParcelableExtra("userDetails");
+        user = (User)getIntent().getSerializableExtra("userDetails");
+        Log.d("myMessage",""+user.getId());
+        getUserCart();
         initToolbar();
         initComponent();
 
@@ -245,20 +246,23 @@ public class MainOfferActivity extends AppCompatActivity {
     }
 
     private void onItemGridClicked(View sharedElement, Coupon obj) {
-        Intent intent = new Intent(this, UserOfferDetails.class);
-        intent.putExtra("couponDetails",obj);
-        intent.putExtra("EXTRA_DURATION", 700L);
+        synchronized (this) {
+            Intent intent = new Intent(this, UserOfferDetails.class);
+            intent.putExtra("couponDetails", obj);
+            intent.putExtra("userCart", cart);
+            intent.putExtra("EXTRA_DURATION", 700L);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, sharedElement, "EXTRA_VIEW");
-            startActivity(intent, options.toBundle());
-        } else {
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElement, "EXTRA_VIEW");
-            // Now we can start the Activity, providing the activity options as a bundle
-            ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, sharedElement, "EXTRA_VIEW");
+                startActivity(intent, options.toBundle());
+
+            } else {
+                ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this, sharedElement, "EXTRA_VIEW");
+                // Now we can start the Activity, providing the activity options as a bundle
+                ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+            }
         }
-
 
     }
 
@@ -344,8 +348,6 @@ public class MainOfferActivity extends AppCompatActivity {
 
         String citySelected = selectCity.getText().toString();
         String areaSelected = selectArea.getText().toString();
-
-
 
         couponAPI = retrofit.create(CouponAPI.class);
 
@@ -467,5 +469,34 @@ public class MainOfferActivity extends AppCompatActivity {
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startMain);
+    }
+
+    public void getUserCart(){
+        synchronized (this) {
+            cartAPI = retrofit.create(CartAPI.class);
+            Call<Cart> call = cartAPI.getUserCart("/api/cart/get-cart/" + user.getId());
+            call.enqueue(new Callback<Cart>() {
+                @Override
+                public void onResponse(Call<Cart> call, Response<Cart> response) {
+                    if (response.code() != 200 || !response.isSuccessful()) {
+                        Toast.makeText(MainOfferActivity.this, "Response : " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    cart = response.body();
+
+                }
+
+                @Override
+                public void onFailure(Call<Cart> call, Throwable t) {
+                    Toast.makeText(MainOfferActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getUserCart();
     }
 }
