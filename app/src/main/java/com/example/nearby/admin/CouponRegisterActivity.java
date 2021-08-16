@@ -269,6 +269,7 @@ public class CouponRegisterActivity extends AppCompatActivity {
                 Coupon couponPutResponse = response.body();
                 String s = "Response Code : " + response.code() + "\nName : " + couponPutResponse.getCity() + "\n" + "Email : " + couponPutResponse.getArea();
                 Toast.makeText(CouponRegisterActivity.this, s, Toast.LENGTH_SHORT).show();
+                CouponRegisterActivity.this.finish();
 
             }
 

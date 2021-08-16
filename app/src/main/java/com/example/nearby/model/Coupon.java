@@ -13,7 +13,9 @@ public class Coupon implements Serializable {
     int price;
     String area;
     String code;
+    public Coupon(){
 
+    }
     public Coupon(String name, String description, int count, String image, String shopName,String city, int price, String area, String code) {
         this.name = name;
         this.description = description;

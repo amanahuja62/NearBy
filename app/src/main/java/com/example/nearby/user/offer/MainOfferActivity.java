@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -104,6 +105,7 @@ public class MainOfferActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //open cart page
                 Intent intent = new Intent(MainOfferActivity.this, MyCartActivity.class);
+                intent.putExtra("userId",user.getId());
                 startActivity(intent);
             }
         });
@@ -246,11 +248,12 @@ public class MainOfferActivity extends AppCompatActivity {
     }
 
     private void onItemGridClicked(View sharedElement, Coupon obj) {
-        synchronized (this) {
+        synchronized (MainOfferActivity.this) {
             Intent intent = new Intent(this, UserOfferDetails.class);
             intent.putExtra("couponDetails", obj);
             intent.putExtra("userCart", cart);
             intent.putExtra("EXTRA_DURATION", 700L);
+            intent.putExtra("prevActivity","MainOfferActivity");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -268,6 +271,7 @@ public class MainOfferActivity extends AppCompatActivity {
 
     public void getEachCoupon(){
         progressDialog.setTitle("Fetching Results...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         couponAPI = retrofit.create(CouponAPI.class);
@@ -283,7 +287,16 @@ public class MainOfferActivity extends AppCompatActivity {
                     return;
                 }
                 List<Coupon> couponList2 = response.body();
+                ArrayList<Coupon> indices = new ArrayList<>();
+                int i=-1;
+                for(Coupon coupon : couponList2) {
+                    i++;
+                    if (coupon.getCount() == 0)
+                        indices.add(coupon);
+                }
+                couponList2.removeAll(indices);
                 mAdapter.setData(couponList2);
+
                 /* recyclerView.setAdapter(new CouponAdapter(AdminMainActivity.this, couponList, R.layout.item_news_horizontal));*/
 
             }
@@ -297,6 +310,7 @@ public class MainOfferActivity extends AppCompatActivity {
     }
     public void getFilteredCoupons(){
         progressDialog.setTitle("Fetching Results...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         String citySelected = selectCity.getText().toString();
         String areaSelected = selectArea.getText().toString();
@@ -319,6 +333,7 @@ public class MainOfferActivity extends AppCompatActivity {
 
     private void filterCouponsOnBasisOfCity() {
         progressDialog.setTitle("Fetching Results...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         String citySelected = selectCity.getText().toString();
         couponAPI = retrofit.create(CouponAPI.class);
@@ -332,6 +347,15 @@ public class MainOfferActivity extends AppCompatActivity {
                     Toast.makeText(MainOfferActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
                 List<Coupon> couponList2 = response.body();
+                ArrayList<Coupon> indices = new ArrayList<>();
+                int i=-1;
+                for(Coupon coupon : couponList2) {
+                    i++;
+                    if (coupon.getCount() == 0)
+                        indices.add(coupon);
+                }
+                couponList2.removeAll(indices);
+
                 mAdapter.setData(couponList2);
 
             }
@@ -360,6 +384,14 @@ public class MainOfferActivity extends AppCompatActivity {
                     Toast.makeText(MainOfferActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
                 List<Coupon> couponList2 = response.body();
+                ArrayList<Coupon> indices = new ArrayList<>();
+                int i=-1;
+                for(Coupon coupon : couponList2) {
+                    i++;
+                    if (coupon.getCount() == 0)
+                        indices.add(coupon);
+                }
+                couponList2.removeAll(indices);
                 mAdapter.setData(couponList2);
 
             }
@@ -387,6 +419,15 @@ public class MainOfferActivity extends AppCompatActivity {
                 areaAdapter.notifyDataSetChanged();
                 if(couponList2 == null)
                     return;
+
+                ArrayList<Coupon> indices = new ArrayList<>();
+                int i=-1;
+                for(Coupon coupon : couponList2) {
+                    i++;
+                    if (coupon.getCount() == 0)
+                        indices.add(coupon);
+                }
+                couponList2.removeAll(indices);
                 if(couponList2.size() == 0)
                     return;
                 if(selectArea.getText().toString().equals(couponList2.get(0).getArea()))
@@ -425,6 +466,14 @@ public class MainOfferActivity extends AppCompatActivity {
                 cityAdapter.notifyDataSetChanged();
                 if(couponList2 == null)
                     return;
+                ArrayList<Coupon> indices = new ArrayList<>();
+                int i=-1;
+                for(Coupon coupon : couponList2) {
+                    i++;
+                    if (coupon.getCount() == 0)
+                        indices.add(coupon);
+                }
+                couponList2.removeAll(indices);
                 if(couponList2.size() == 0)
                     return;
                 if(selectCity.getText().toString().equals(couponList2.get(0).getCity()))
@@ -449,6 +498,9 @@ public class MainOfferActivity extends AppCompatActivity {
 
 
     public void goToMyOffers(View view) {
+        Intent intent = new Intent(MainOfferActivity.this,MyOffersActivity.class);
+        intent.putExtra("userDetails",user);
+        startActivity(intent);
     }
 
     public void signUserOut(View view) {
@@ -472,7 +524,7 @@ public class MainOfferActivity extends AppCompatActivity {
     }
 
     public void getUserCart(){
-        synchronized (this) {
+        synchronized (MainOfferActivity.this) {
             cartAPI = retrofit.create(CartAPI.class);
             Call<Cart> call = cartAPI.getUserCart("/api/cart/get-cart/" + user.getId());
             call.enqueue(new Callback<Cart>() {
@@ -499,4 +551,6 @@ public class MainOfferActivity extends AppCompatActivity {
         super.onRestart();
         getUserCart();
     }
+
+
 }

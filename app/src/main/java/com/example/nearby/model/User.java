@@ -48,6 +48,13 @@ public class User implements Serializable {
         return id;
     }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
 
 

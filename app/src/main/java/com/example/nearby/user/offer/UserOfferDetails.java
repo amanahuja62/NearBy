@@ -62,15 +62,16 @@ public class UserOfferDetails extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        duration = getIntent().getLongExtra("EXTRA_DURATION", 400L);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
-            // Set up shared element transition
-            findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW");
-            setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
-            getWindow().setSharedElementEnterTransition(buildContainerTransform(true));
-            getWindow().setSharedElementReturnTransition(buildContainerTransform(false));
+        if(getIntent().getStringExtra("prevActivity").equals("MainOfferActivity")) {
+            duration = getIntent().getLongExtra("EXTRA_DURATION", 400L);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+                // Set up shared element transition
+                findViewById(android.R.id.content).setTransitionName("EXTRA_VIEW");
+                setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
+                getWindow().setSharedElementEnterTransition(buildContainerTransform(true));
+                getWindow().setSharedElementReturnTransition(buildContainerTransform(false));
+            }
         }
 
         super.onCreate(savedInstanceState);
@@ -108,7 +109,7 @@ public class UserOfferDetails extends AppCompatActivity {
     private MaterialContainerTransform buildContainerTransform(boolean entering) {
         MaterialContainerTransform transform = new MaterialContainerTransform();
         transform.setTransitionDirection(entering ? MaterialContainerTransform.TRANSITION_DIRECTION_ENTER : MaterialContainerTransform.TRANSITION_DIRECTION_RETURN);
-  /*      transform.setAllContainerColors(MaterialColors.getColor(findViewById(android.R.id.content), R.attr.colorSurface));*/
+        /*transform.setAllContainerColors(MaterialColors.getColor(findViewById(android.R.id.content), R.attr.colorSurface));*/
         transform.addTarget(android.R.id.content);
         transform.setDuration(duration);
         return transform;
@@ -129,6 +130,11 @@ public class UserOfferDetails extends AppCompatActivity {
             Toast.makeText(UserOfferDetails.this, "Item already added to cart", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(coupon.getCount() == 0){
+            Toast.makeText(UserOfferDetails.this, "This offer has expied !", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
         backButton.setEnabled(false);
         couponIds.add(coupon.getId());
@@ -156,9 +162,13 @@ public class UserOfferDetails extends AppCompatActivity {
     }
 
     public void cartButtonClicked(View view) {
+        Intent intent = new Intent(UserOfferDetails.this, MyCartActivity.class);
+        intent.putExtra("userId",cart.getCreatedBy());
+        startActivity(intent);
+
     }
 
     public void backButtonClicked(View view) {
-        finish();
+        super.onBackPressed();
     }
 }

@@ -176,7 +176,6 @@ public class AdminMainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
         getEachCoupon();
-
         // on item list clicked
         mAdapter.setOnItemClickListener(new CouponAdapter.OnItemClickListener() {
             @Override

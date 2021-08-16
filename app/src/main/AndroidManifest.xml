@@ -16,10 +16,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".user.mycart.CheckoutActivity"
+            android:exported="true" />
+        <activity
+            android:name=".user.mycart.MyCartActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".user.offer.MyOffersActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".user.mycart.MyCartActivity" />
         <activity
             android:name=".admin.UploadedImageActivity"
             android:exported="true" />

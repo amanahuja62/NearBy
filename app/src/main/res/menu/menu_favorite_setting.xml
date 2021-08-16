@@ -6,6 +6,8 @@
         android:icon="@drawable/ic_shopping_cart"
         android:orderInCategory="100"
         android:title="Shopping Cart"
+        app:tint="@android:color/white"
+        android:iconTintMode="src_atop"
         app:showAsAction="always" />
 
 </menu>

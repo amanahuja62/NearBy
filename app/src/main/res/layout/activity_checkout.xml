@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:elevation="0dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/white"
+                app:contentInsetStartWithNavigation="0dp"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/Toolbar.Light">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginEnd="@dimen/spacing_large"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Checkout"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/grey_80"
+                        app:fontFamily="sans-serif-medium" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.001"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:layout_marginLeft="@dimen/spacing_large"
+
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="Total Amount :"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_90"
+                app:fontFamily="sans-serif-medium" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="@string/Rs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_90"
+                app:fontFamily="sans-serif-medium" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="100"
+                android:id="@+id/totalprice"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_90"
+                app:fontFamily="sans-serif-medium" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0.001">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/light_green_400" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large">
+
+                    <ImageView
+                        android:layout_width="@dimen/spacing_mxlarge"
+                        android:layout_height="@dimen/spacing_mxlarge"
+                        app:srcCompat="@drawable/shape_round_solid"
+                        app:tint="@color/light_green_400" />
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/ic_location" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:layout_marginLeft="@dimen/spacing_large"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="Shipping"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/grey_90"
+                    app:fontFamily="sans-serif-medium" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
+
+                    <EditText
+                        style="@style/EditText.Flat.Grey.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:id="@+id/phone"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:layout_marginTop="@dimen/spacing_middle"
+                        android:background="@drawable/edit_text_round_bg_outline"
+                        android:hint="Phone"
+                        android:minHeight="@dimen/spacing_xmlarge" />
+
+                    <EditText
+                        style="@style/EditText.Flat.Grey.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:layout_marginTop="@dimen/spacing_middle"
+                        android:id="@+id/address"
+                        android:background="@drawable/edit_text_round_bg_outline"
+                        android:hint="Address"
+                        android:minHeight="@dimen/spacing_xmlarge" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0.001">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/light_green_400" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large">
+
+                    <ImageView
+                        android:layout_width="@dimen/spacing_mxlarge"
+                        android:layout_height="@dimen/spacing_mxlarge"
+                        app:srcCompat="@drawable/shape_round_solid"
+                        app:tint="@color/light_green_400" />
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerInParent="true"
+                        app:srcCompat="@drawable/ic_attach_money" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:layout_marginLeft="@dimen/spacing_large"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="Payment"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/grey_90"
+                    app:fontFamily="sans-serif-medium" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
+
+                    <EditText
+                        style="@style/EditText.Flat.Grey.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:background="@drawable/edit_text_round_bg_outline"
+                        android:hint="Card Type"
+                        android:minHeight="@dimen/spacing_xmlarge" />
+
+                    <EditText
+                        style="@style/EditText.Flat.Grey.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:layout_marginTop="@dimen/spacing_middle"
+                        android:drawableEnd="@drawable/ic_person_grey"
+                        android:drawableRight="@drawable/ic_person_grey"
+                        android:background="@drawable/edit_text_round_bg_outline"
+                        android:hint="Name on Card"
+                        android:minHeight="@dimen/spacing_xmlarge" />
+
+                    <EditText
+                        style="@style/EditText.Flat.Grey.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:layout_marginTop="@dimen/spacing_middle"
+                        android:drawableEnd="@drawable/ic_credit_card_grey"
+                        android:drawableRight="@drawable/ic_credit_card_grey"
+                        android:background="@drawable/edit_text_round_bg_outline"
+                        android:hint="Card Number"
+                        android:minHeight="@dimen/spacing_xmlarge" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_middle"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            style="@style/EditText.Flat.Grey.Small"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/spacing_xlarge"
+                            android:layout_weight="1"
+                            android:drawableEnd="@drawable/ic_event_grey"
+                            android:drawableRight="@drawable/ic_event_grey"
+                            android:background="@drawable/edit_text_round_bg_outline"
+                            android:hint="Expired Date" />
+
+                        <View
+                            android:layout_width="@dimen/spacing_middle"
+                            android:layout_height="0dp" />
+
+                        <EditText
+                            style="@style/EditText.Flat.Grey.Small"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/spacing_xlarge"
+                            android:layout_weight="1"
+                            android:background="@drawable/edit_text_round_bg_outline"
+                            android:hint="CVV" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:id="@+id/submit"
+
+            style="@style/RippleStyleWhite"
+            android:layout_width="match_parent"
+            android:layout_weight="0.001"
+
+            android:layout_height="@dimen/spacing_xxlarge"
+            android:background="@color/light_green_400">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Order"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                    android:textColor="@android:color/white" />
+
+                <ImageView
+                    android:layout_width="@dimen/spacing_smlarge"
+                    android:layout_height="@dimen/spacing_smlarge"
+                    android:layout_marginLeft="@dimen/spacing_medium"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    app:srcCompat="@drawable/ic_done"
+                    app:tint="@android:color/white" />
+
+            </LinearLayout>
+
+
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
