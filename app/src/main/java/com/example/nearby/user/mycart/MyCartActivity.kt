@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -17,13 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.balysv.materialripple.MaterialRippleLayout
 import com.example.nearby.CartAPI
-import com.example.nearby.CouponAPI
 import com.example.nearby.R
 import com.example.nearby.adapter.MyCartOfferAdapter
 import com.example.nearby.model.Cart
 import com.example.nearby.model.Coupon
 import com.example.nearby.user.offer.UserOfferDetails
 import com.example.nearby.utils.Tools
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,10 +39,9 @@ class MyCartActivity : AppCompatActivity() {
         .build()
     var optionsForUser = arrayOf("Go to offers page", "Remove item from cart")
     var totalAmount : Long =0
-    val arrayList = ArrayList<Coupon>()
-    var loadedNum : Int =0
+    lateinit var arrayList : ArrayList<Coupon>
     lateinit var progressDialog : ProgressDialog
-
+    lateinit var sp : SharedPreferences
     var myCartOfferAdapter = MyCartOfferAdapter(this,R.layout.indiv_cart_offer)
     lateinit var recyclerView: RecyclerView
     lateinit var totalPrice : TextView
@@ -50,41 +50,31 @@ class MyCartActivity : AppCompatActivity() {
      lateinit var cart : Cart
      var userId : Long = 0
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_cart)
         initToolbar()
         initComponent()
         userId = intent.getLongExtra("userId",1)
-        getCouponIDsFromApi()
+        getCartIDusingUserID()
 
     }
 
-    private fun getCouponIDsFromApi() {
-        arrayList.clear()
+    private fun getCartIDusingUserID() {
+       val tempList = ArrayList<Coupon>()
+        myCartOfferAdapter.setData(tempList)
         totalPrice.text = "0"
-        myCartOfferAdapter.setData(arrayList)
         val cartAPI = retrofit.create(CartAPI::class.java)
-        val call = cartAPI.getUserCart("/api/cart/get-cart/${userId.toString()}")
+        val call = cartAPI.getUserCart("/api/cart/get-cart/"+userId.toString())
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<Cart>{
             override fun onResponse(call: Call<Cart>, response: Response<Cart>) {
                 if(response.code()==200){
                     totalAmount = 0
-                    loadedNum = 0
-                    var index : Int = 0
                     cart  = response.body()!!
-                    if(cart.coupon_ids.size == 0)
-                    {
-                        Toast.makeText(this@MyCartActivity,"Your cart is empty",Toast.LENGTH_LONG).show()
-                        progressBar.visibility = View.GONE
-                    }
-                    for(couponId in cart.coupon_ids){
-                        addCouponToList(couponId,index)
-                        index++
-                    }
-
-
+                    //now that I have cart id, I can hit the api and get List<Coupon> using cartID
+                    setCouponsInAdapter(cart.id,cartAPI)
                 }
             }
 
@@ -96,49 +86,55 @@ class MyCartActivity : AppCompatActivity() {
         })
     }
 
-    private fun addCouponToList(couponId: Long, index: Int) {
-           val couponAPI = retrofit.create(CouponAPI::class.java)
-           val call = couponAPI.getCouponHavingID(couponId)
-           call.enqueue(object :Callback<Coupon>{
-            override fun onResponse(call: Call<Coupon>, response: Response<Coupon>) {
-                if(response.code()==200){
-                    val coupon = response.body()!!
-                    arrayList.add(coupon)
-                    myCartOfferAdapter.setData(arrayList)
-                    totalAmount = totalAmount + coupon.price
-                    loadedNum++
-                    totalPrice.text = totalAmount.toString()
-
+   // This method hits api and gets List<Coupon> and sets them in the adapter
+    private fun setCouponsInAdapter(id: Long, cartAPI: CartAPI) {
+        val call = cartAPI.getCouponsOfCartHavingID(id)
+        call.enqueue(object : Callback<ArrayList<Coupon>>{
+            override fun onResponse(call: Call<ArrayList<Coupon>>,response: Response<ArrayList<Coupon>>) {
+                progressBar.visibility = View.GONE
+                if(response.code() != 200){
+                    Toast.makeText(this@MyCartActivity,response.code().toString(),Toast.LENGTH_SHORT).show()
+                    return
                 }
-                if(index == 0)
-                    progressBar.visibility = View.GONE
+                arrayList = response.body()!!
+                if(arrayList.size == 0){
+                    Toast.makeText(this@MyCartActivity,"Your cart is empty !",Toast.LENGTH_LONG).show()
+                    return
+                }
 
+                for(coupon in arrayList)
+                    totalAmount = totalAmount + coupon.price
+                totalPrice.text = totalAmount.toString()
+                myCartOfferAdapter.setData(arrayList)
             }
 
-            override fun onFailure(call: Call<Coupon>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<Coupon>>, t: Throwable) {
+                progressBar.visibility = View.GONE
                 Toast.makeText(this@MyCartActivity,t.message,Toast.LENGTH_SHORT).show()
-                if(index == 0)
-                    progressBar.visibility = View.GONE
             }
 
         })
+
     }
+
+
     private fun initComponent() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter = myCartOfferAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         totalPrice = findViewById(R.id.price)
         progressBar = findViewById(R.id.progressBar3)
-        materialRippleLayout = findViewById(R.id.checkoutButton)
+        materialRippleLayout = findViewById(R.id.checkoutButton2)
 
         materialRippleLayout.setOnClickListener {
-            if (!(this::cart.isInitialized) || loadedNum != cart.coupon_ids.size ){
+            if (!(this::cart.isInitialized) || !(this::arrayList.isInitialized) ){
                 Toast.makeText(this,"Please wait...",Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(this@MyCartActivity,CheckoutActivity::class.java)
                 intent.putExtra("couponsList",arrayList)
                 intent.putExtra("totalPrice",totalAmount)
                 intent.putExtra("cartId",cart.id)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
             }
         }
@@ -156,6 +152,7 @@ class MyCartActivity : AppCompatActivity() {
                             0 -> {val intent = Intent(this@MyCartActivity,UserOfferDetails::class.java)
                                   intent.putExtra("prevActivity","MyCartActivity")
                                   intent.putExtra("userCart",cart)
+                                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                   intent.putExtra("couponDetails",obj)
                                   startActivity(intent)
                             }
@@ -174,12 +171,17 @@ class MyCartActivity : AppCompatActivity() {
                                            totalAmount = totalAmount -obj.price
                                            totalPrice.text = totalAmount.toString()
                                            arrayList.remove(obj)
-                                           loadedNum--
+                                           val gson = Gson()
+                                           val json = gson.toJson(cart.coupon_ids)
+                                           sp  = getSharedPreferences("users", MODE_PRIVATE)
+                                           sp.edit().putString("notPurchasedCoupons", json).apply()
+
                                            myCartOfferAdapter.mList.remove(obj)
                                            myCartOfferAdapter.notifyDataSetChanged()
 
                                            return
                                        }
+                                        Toast.makeText(this@MyCartActivity,response.code().toString(),Toast.LENGTH_SHORT).show()
                                         cart.coupon_ids.add(obj.id)
                                     }
 
@@ -224,12 +226,13 @@ class MyCartActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        getCouponIDsFromApi()
+        getCartIDusingUserID()
 
     }
 
 
 }
+
 
 
 

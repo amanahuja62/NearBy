@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -19,7 +20,6 @@ import com.example.nearby.MyOffersApi
 
 import com.example.nearby.R
 import com.example.nearby.adapter.MyCartOfferAdapter
-import com.example.nearby.admin.AdminMainActivity
 import com.example.nearby.model.Coupon
 import com.example.nearby.model.PostPurchase
 import com.example.nearby.model.PostPurchaseResponse
@@ -32,6 +32,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Suppress("DEPRECATION")
@@ -50,8 +52,10 @@ class CheckoutActivity : AppCompatActivity() {
     lateinit var progressDialog : ProgressDialog
     lateinit var obj : User
     var cartId : Long? = null
+
     val mAdapter = MyCartOfferAdapter(this,R.layout.indiv_checkout_offer)
     lateinit var couponsList : ArrayList<Coupon>
+    lateinit var couponIdsList : ArrayList<Long>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +76,7 @@ class CheckoutActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         sp = getSharedPreferences("users", MODE_PRIVATE)
 
-        //user has logged in before
+
         val gson = Gson()
         val json = sp.getString("userDetails", "")
         obj = gson.fromJson(json,User::class.java)
@@ -80,6 +84,10 @@ class CheckoutActivity : AppCompatActivity() {
         couponsList = intent.getSerializableExtra("couponsList") as ArrayList<Coupon>
         totalPrice.text = intent.getLongExtra("totalPrice",100).toString()
         cartId = intent.getLongExtra("cartId",1)
+        couponIdsList = ArrayList<Long>()
+        for(coupon in couponsList){
+            couponIdsList.add(coupon.id)
+        }
 
         materialRippleLayout.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
@@ -123,6 +131,14 @@ class CheckoutActivity : AppCompatActivity() {
         obj.address = address.text.toString()
         obj.phone = phone.text.toString()
 
+        val gson = Gson()
+        val sp : SharedPreferences = getSharedPreferences("users", MODE_PRIVATE)
+        val json =  sp.getString("notPurchasedCoupons","")
+        val notPurchasedCoupons = gson.fromJson(json, Array<Long>::class.java)
+        Log.d("abcdefghi",notPurchasedCoupons[0].toString())
+        val list = ArrayList(Arrays.asList<Long>(*notPurchasedCoupons))
+
+
 
         val loginAPI = retrofit.create(LoginAPI::class.java)
         val call = loginAPI.updateUserContacts(obj.id,obj)
@@ -135,7 +151,7 @@ class CheckoutActivity : AppCompatActivity() {
 
                 if(response.code() == 200)
                     //user contacts updated
-                    purchaseItemsInCart()
+                    purchaseItemsInCart(list)
 
             }
 
@@ -147,7 +163,7 @@ class CheckoutActivity : AppCompatActivity() {
         })
     }
 
-    private fun purchaseItemsInCart() {
+    private fun purchaseItemsInCart(notPurchasedCoupons: ArrayList<Long>) {
         val postPurchase = PostPurchase(cartId,obj.id,obj.email)
         val myOffersApi= retrofit.create(MyOffersApi::class.java)
         val call = myOffersApi.purchaseItemsInCart(obj.phone,obj.address,postPurchase)
@@ -155,6 +171,12 @@ class CheckoutActivity : AppCompatActivity() {
             override fun onResponse(call: Call<PostPurchaseResponse>,response: Response<PostPurchaseResponse>) {
               if(response.code()==200){
                   progressDialog.dismiss()
+                  notPurchasedCoupons.removeAll(couponIdsList)
+
+                  val gson = Gson()
+                  val json = gson.toJson(notPurchasedCoupons)
+                  sp.edit().putString("notPurchasedCoupons", json).apply()
+                  sp.edit().putString("purchased","yes").apply()
                   Toast.makeText(this@CheckoutActivity,"Your Order has been placed",Toast.LENGTH_LONG).show()
                   val intent = Intent(this@CheckoutActivity,MyOffersActivity::class.java)
                   intent.putExtra("userDetails",obj)

@@ -39,6 +39,9 @@ public interface CouponAPI {
     @GET("/api/coupons/coupon/{id}")
     Call<Coupon> getCouponHavingID(@Path("id") long id);
 
+    @PUT("/api/coupons/update-coupon/{couponId}/{userId}")
+    Call<Coupon> updateLikes(@Path("couponId")long couponId, @Path("userId")long userId);
+
 
 
 

@@ -26,4 +26,8 @@ public class Cart implements Serializable {
     public ArrayList<Long> getCoupon_ids() {
         return coupon_ids;
     }
+
+    public void setCoupon_ids(ArrayList<Long> coupon_ids) {
+        this.coupon_ids = coupon_ids;
+    }
 }

@@ -1,8 +1,10 @@
 package com.example.nearby.user.offer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,16 +23,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 
 import com.example.nearby.CartAPI;
+import com.example.nearby.CouponAPI;
 import com.example.nearby.R;
 import com.example.nearby.model.Cart;
 import com.example.nearby.model.Coupon;
+import com.example.nearby.model.User;
 import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.transition.platform.MaterialContainerTransform;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +58,7 @@ public class UserOfferDetails extends AppCompatActivity {
     TextView offerPrice;
     TextView offerDescription;
     Button addToCart;
+    SharedPreferences sp;
     ArrayList<Long> couponIds = new ArrayList<>();
     Coupon coupon;
     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nearby-backend.herokuapp.com")
@@ -76,9 +83,20 @@ public class UserOfferDetails extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_offer_details);
-        coupon = (Coupon) getIntent().getSerializableExtra("couponDetails");
-        cart = (Cart)getIntent().getSerializableExtra("userCart");
+        try {
+            coupon = (Coupon) getIntent().getSerializableExtra("couponDetails");
+            cart = (Cart) getIntent().getSerializableExtra("userCart");
+            sp = getSharedPreferences("users",MODE_PRIVATE);
+            ArrayList<Long> couponIds = cart.getCoupon_ids();
+            Gson gson = new Gson();
+            String json = gson.toJson(couponIds);
+            sp.edit().putString("notPurchasedCoupons",json).apply();
+        }
+        catch (Exception e){
 
+            Toast.makeText(UserOfferDetails.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            finish();
+        }
         offerImage = findViewById(R.id.offerImage);
         shopName = findViewById(R.id.shopName);
         offerLocation = findViewById(R.id.offerLocation);
@@ -91,7 +109,7 @@ public class UserOfferDetails extends AppCompatActivity {
 
         Tools.displayImageOriginal(this, offerImage, coupon.getImage());
         shopName.setText(coupon.getShopName());
-        offerLocation.setText(coupon.getCity()+", "+coupon.getArea());
+        offerLocation.setText(coupon.getArea()+", "+coupon.getCity());
         offerName.setText(coupon.getName());
         offerDescription.setText(coupon.getDescription());
         offerPrice.setText(String.valueOf(coupon.getPrice()));
@@ -124,21 +142,19 @@ public class UserOfferDetails extends AppCompatActivity {
             Toast.makeText(UserOfferDetails.this, "Item already added to cart", Toast.LENGTH_SHORT).show();
             return;
         }
-        cartAPI = retrofit.create(CartAPI.class);
+
         couponIds.addAll(cart.getCoupon_ids());
         if(couponIds.contains(coupon.getId())){
             Toast.makeText(UserOfferDetails.this, "Item already added to cart", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(coupon.getCount() == 0){
-            Toast.makeText(UserOfferDetails.this, "This offer has expied !", Toast.LENGTH_LONG).show();
-            return;
-        }
 
         progressBar.setVisibility(View.VISIBLE);
+
         backButton.setEnabled(false);
         couponIds.add(coupon.getId());
         Cart cart2 = new Cart(cart.getId(), cart.getCreatedBy(),couponIds);
+        cartAPI = retrofit.create(CartAPI.class);
         Call<Cart> call = cartAPI.updateUserCart(cart.getId(),cart2);
         call.enqueue(new Callback<Cart>() {
             @Override
@@ -147,8 +163,14 @@ public class UserOfferDetails extends AppCompatActivity {
                 backButton.setEnabled(true);
                   if(!response.isSuccessful() || response.code()!= 200) {
                       Toast.makeText(UserOfferDetails.this, "Response code :" + response.code(), Toast.LENGTH_SHORT).show();
+                      couponIds.remove(coupon.getId());
                       return;
                   }
+                Gson gson = new Gson();
+                String json = gson.toJson(couponIds);
+                sp.edit().putString("notPurchasedCoupons",json).apply();
+
+
                 Toast.makeText(UserOfferDetails.this, "Item added to cart", Toast.LENGTH_SHORT).show();
             }
 
@@ -156,6 +178,7 @@ public class UserOfferDetails extends AppCompatActivity {
             public void onFailure(Call<Cart> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
                 backButton.setEnabled(true);
+                couponIds.remove(coupon.getId());
                 Toast.makeText(UserOfferDetails.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -164,11 +187,37 @@ public class UserOfferDetails extends AppCompatActivity {
     public void cartButtonClicked(View view) {
         Intent intent = new Intent(UserOfferDetails.this, MyCartActivity.class);
         intent.putExtra("userId",cart.getCreatedBy());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
     }
 
     public void backButtonClicked(View view) {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if(sp.getString("purchased","no").equals("yes")){
+            //user has purchased, cart is destroyed
+            sp.edit().putString("purchased","no");
+            finish();
+        }
+        Gson gson = new Gson();
+        sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+            }
+        });
+        String json = sp.getString("notPurchasedCoupons", "");
+        Long[] remainingCoupons = gson.fromJson(json, Long[].class);
+        ArrayList<Long> list = new ArrayList<>(Arrays.asList(remainingCoupons));
+        couponIds.clear();
+        couponIds.addAll(list);
+        cart.setCoupon_ids(list);
+
     }
 }

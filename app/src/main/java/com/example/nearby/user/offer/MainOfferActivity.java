@@ -4,9 +4,11 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,7 +19,9 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -223,8 +227,9 @@ public class MainOfferActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(this, 4), true));
         recyclerView.setHasFixedSize(true);
+
         //set data and list adapter
-        mAdapter = new UserOfferAdapter(this);
+        mAdapter = new UserOfferAdapter(this, user.getId());
         recyclerView.setAdapter(mAdapter);
         progressDialog = new ProgressDialog(this);
 
@@ -233,6 +238,14 @@ public class MainOfferActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, Coupon obj, int position) {
                 onItemGridClicked(view, obj);
+            }
+        });
+        mAdapter.setOnLikeButtonClickListener(new UserOfferAdapter.onLikeButtonClickListener() {
+            @Override
+            public void onLikeClikced(TextView textView, Coupon obj, ImageButton imageButton) {
+                int count = Integer.parseInt(textView.getText().toString());
+                updateLikesOnServer(user.getId(),obj.getId(),textView,count,imageButton);
+
             }
         });
         selectCity = findViewById(R.id.selectCity);
@@ -245,6 +258,35 @@ public class MainOfferActivity extends AppCompatActivity {
         selectArea = findViewById(R.id.selectArea);
 
         materialRippleLayout =findViewById(R.id.btn_apply);
+    }
+
+    private void updateLikesOnServer(long userId, long couponId, TextView textView, int count, ImageButton imageButton) {
+        CouponAPI couponAPI = retrofit.create(CouponAPI.class);
+        Call<Coupon> call = couponAPI.updateLikes(couponId,userId);
+        call.enqueue(new Callback<Coupon>() {
+            @Override
+            public void onResponse(Call<Coupon> call, Response<Coupon> response) {
+                if(response.code()==200){
+                    Coupon coupon = response.body();
+                    if(coupon.getLikedBy().contains(userId)) {
+                        textView.setText("" + (count + 1));
+                        imageButton.setColorFilter(Color.parseColor("#C62828"));
+                    }
+                    else {
+                        textView.setText("" + (count - 1));
+                        imageButton.setColorFilter(Color.parseColor("#EF9A9A"));
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Coupon> call, Throwable t) {
+                Toast.makeText(MainOfferActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void onItemGridClicked(View sharedElement, Coupon obj) {
@@ -551,6 +593,5 @@ public class MainOfferActivity extends AppCompatActivity {
         super.onRestart();
         getUserCart();
     }
-
 
 }

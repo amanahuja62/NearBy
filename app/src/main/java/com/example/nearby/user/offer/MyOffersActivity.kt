@@ -66,7 +66,7 @@ class MyOffersActivity : AppCompatActivity() {
                          for(id in myOffer.coupons)
                              addOfferAvailedDetailsToList(id,myOffer.address,myOffer.transactionDate)
                      }
-                       progressDialog.dismiss()
+
 
                      Log.d("abcdef","${indivOfferList.size.toString()}")
 
@@ -102,10 +102,13 @@ class MyOffersActivity : AppCompatActivity() {
 
             call.enqueue(object : Callback<Coupon> {
                 override fun onResponse(call: Call<Coupon>, response: Response<Coupon>) {
-                    coupon = response.body()!!
-                    indivOfferList.add(IndivOfferPurchased(coupon,address,transactionDate))
-                    Log.d("abcdeff","${indivOfferList.size.toString()}")
-                    myOfferAdapter.setData(indivOfferList)
+                    if(response.code()==200) {
+                        coupon = response.body()!!
+                        indivOfferList.add(IndivOfferPurchased(coupon, address, transactionDate))
+                        Log.d("abcdeff", "${indivOfferList.size.toString()}")
+                        myOfferAdapter.setData(indivOfferList)
+                        progressDialog.dismiss()
+                    }
                 }
 
                 override fun onFailure(call: Call<Coupon>, t: Throwable) {
@@ -128,6 +131,7 @@ class MyOffersActivity : AppCompatActivity() {
         } else {
             val intent = Intent(this@MyOffersActivity, MyCartActivity::class.java)
             intent.putExtra("userId", (user.id))
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)

@@ -1,6 +1,8 @@
 package com.example.nearby.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Coupon implements Serializable {
     String name;
@@ -11,6 +13,7 @@ public class Coupon implements Serializable {
     long id;
     String city;
     int price;
+    ArrayList<Long> likedBy;
     String area;
     String code;
     public Coupon(){
@@ -69,4 +72,11 @@ public class Coupon implements Serializable {
         return price;
     }
 
+    public ArrayList<Long> getLikedBy() {
+        return likedBy;
+    }
+
+    public void setLikedBy(ArrayList<Long> likedBy) {
+        this.likedBy = likedBy;
+    }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         sp = getSharedPreferences("users",MODE_PRIVATE);
 
-
+        Log.d("amanahuja1",""+sp.getBoolean("logged",true));
 
 
         if(sp.getBoolean("logged",false)){
@@ -166,5 +167,11 @@ public class MainActivity extends AppCompatActivity {
 
         else
             Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("amanahuja",""+sp.getBoolean("logged",true));
     }
 }

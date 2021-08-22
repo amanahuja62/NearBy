@@ -87,7 +87,7 @@ public class CouponAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Coupon n = items.get(position);
             view.name.setText(n.getName());
             view.description.setText(n.getDescription());
-            view.scc.setText(n.getShopName()+"\n"+"Count = "+n.getCount()+"\n"+"Coupon Code = "+n.getCode()
+            view.scc.setText(n.getShopName()+"\n"+"Count = "+n.getCount()+"      "+"Likes = "+n.getLikedBy().size()+"\n"+"Coupon Code = "+n.getCode()
             +"\n"+"Price = Rs "+n.getPrice());
 
             view.city.setText(n.getCity());

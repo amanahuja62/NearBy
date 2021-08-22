@@ -88,7 +88,7 @@
            android:layout_width="match_parent"
            android:layout_height="?attr/actionBarSize"
            android:layout_alignParentBottom="true"
-           android:id="@+id/checkoutButton"
+           android:id="@+id/checkoutButton2"
 
            android:layout_weight="0.001"
            android:background="@color/blue_600">

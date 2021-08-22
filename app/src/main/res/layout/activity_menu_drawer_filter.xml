@@ -230,23 +230,30 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <Button
                         android:id="@+id/addNewCoupon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_weight="0.86"
                         android:onClick="createNewCoupon"
-                        android:text="Add New Coupon"
-                        android:textColor="@color/red_900" />
+                        android:background="@drawable/btn_rounded_red"
+                        android:text="New Coupon"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        android:textColor="@android:color/white"
+                        app:fontFamily="sans-serif-medium" />
 
-                    <TextView
+                    <Button
                         android:id="@+id/signOutAdmin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_height="45dp"
                         android:layout_weight="1"
+                        android:background="@drawable/btn_rounded_red"
                         android:onClick="signAdminOut"
                         android:text="Sign out"
-                        android:textColor="@color/red_900" />
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        android:textColor="@android:color/white"
+                        app:fontFamily="sans-serif-medium" />
                 </LinearLayout>
 
             </LinearLayout>

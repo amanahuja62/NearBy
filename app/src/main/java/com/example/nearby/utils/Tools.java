@@ -1,12 +1,17 @@
 package com.example.nearby.utils;
 
+import static android.os.Build.VERSION_CODES.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.StrictMode;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -14,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -22,6 +28,9 @@ import androidx.annotation.DrawableRes;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.net.URL;
 
 public class Tools {
 
@@ -43,21 +52,26 @@ public class Tools {
             window.setStatusBarColor(color);
         }
     }
-    public static void displayImageOriginal(Context ctx, ImageView img, @DrawableRes int drawable) {
-        try {
-            Glide.with(ctx)
-                    .load(drawable)
-                    .into(img);
-        } catch (Exception e) {
-        }
-    }
-    public static void displayImageOriginal(Context ctx, ImageView img, String url) {
+
+/*    public static void displayImageOriginal(Context ctx, ImageView img, String url) {
         try {
             Log.d("message",url);
             Glide.with(ctx).load(url)
-                           .into(img);
+                    .dontAnimate()
+                    .into(img);
         } catch (Exception e) {
+            Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }*/
+    public static void displayImageOriginal(Context ctx, ImageView img, String url) {
+        try {
+            Picasso.get().load(url).error(android.R.drawable.stat_notify_error).into(img);
+        }
+        catch (Exception e){
+            Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
 
