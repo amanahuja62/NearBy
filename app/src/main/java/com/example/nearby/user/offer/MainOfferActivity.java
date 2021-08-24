@@ -8,12 +8,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -44,8 +42,10 @@ import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
 import com.example.nearby.widget.SpacingItemDecoration;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -23,29 +23,29 @@ public interface CouponAPI {
     Call<Coupon> postCoupon(@Body Coupon coupon);
 
 
-
+    @Headers({"Key: key","Password: password"})
     @GET("/api/coupons/all-coupons")
     Call<List<Coupon>> getAllCoupons();
 
+    @Headers({"Key: key","Password: password"})
     @GET
     Call<List<Coupon>> getSelectedCoupons(@Url String url);
 
+    @Headers({"Key: key","Password: password"})
     @PUT("/api/coupons/coupon/{id}")
     Call<Coupon> putCoupon(@Path("id") long id, @Body Coupon coupon);
 
+    @Headers({"Key: key","Password: password"})
     @DELETE("/api/coupons/coupon/{id}")
     Call<DeleteResponse> deleteCoupon(@Path("id") long id);
 
+    @Headers({"Key: key","Password: password"})
     @GET("/api/coupons/coupon/{id}")
     Call<Coupon> getCouponHavingID(@Path("id") long id);
 
+    @Headers({"Key: key","Password: password"})
     @PUT("/api/coupons/update-coupon/{couponId}/{userId}")
     Call<Coupon> updateLikes(@Path("couponId")long couponId, @Path("userId")long userId);
-
-
-
-
-
 
 
 }
