@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -35,7 +36,7 @@ public class UserOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onItemClick(View view, Coupon obj, int position);
     }
     public interface onLikeButtonClickListener{
-        void onLikeClikced(TextView textView, Coupon obj, ImageButton imageButton);
+        void onLikeClikced(TextView textView, Coupon obj, ImageButton imageButton, ProgressBar progressBar);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -62,6 +63,7 @@ public class UserOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public ImageButton like;
         public View lyt_parent;
         public TextView noOfLikes;
+        public ProgressBar progressBar;
         public OriginalViewHolder(View v) {
             super(v);
              image = v.findViewById(R.id.image);
@@ -69,6 +71,7 @@ public class UserOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
              offerLocation = v.findViewById(R.id.offerLocation);
              offerName = v.findViewById(R.id.offerName);
              lyt_bottom = v.findViewById(R.id.lyt_bottom);
+             progressBar = v.findViewById(R.id.progressBar4);
              like = v.findViewById(R.id.btn_like);
              offerPrice = v.findViewById(R.id.textView2);
              lyt_parent = v.findViewById(R.id.lyt_parent);
@@ -123,7 +126,7 @@ public class UserOfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 @Override
                 public void onClick(View v) {
                     if (onLikeButtonClickListener != null) {
-                        onLikeButtonClickListener.onLikeClikced(view.noOfLikes,items.get(position),view.like);
+                        onLikeButtonClickListener.onLikeClikced(view.noOfLikes,items.get(position),view.like, view.progressBar);
                     }
                 }
             });

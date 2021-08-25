@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -242,9 +243,9 @@ public class MainOfferActivity extends AppCompatActivity {
         });
         mAdapter.setOnLikeButtonClickListener(new UserOfferAdapter.onLikeButtonClickListener() {
             @Override
-            public void onLikeClikced(TextView textView, Coupon obj, ImageButton imageButton) {
+            public void onLikeClikced(TextView textView, Coupon obj, ImageButton imageButton, ProgressBar progressBar) {
                 int count = Integer.parseInt(textView.getText().toString());
-                updateLikesOnServer(user.getId(),obj.getId(),textView,count,imageButton);
+                updateLikesOnServer(user.getId(),obj.getId(),textView,count,imageButton,progressBar);
 
             }
         });
@@ -260,12 +261,18 @@ public class MainOfferActivity extends AppCompatActivity {
         materialRippleLayout =findViewById(R.id.btn_apply);
     }
 
-    private void updateLikesOnServer(long userId, long couponId, TextView textView, int count, ImageButton imageButton) {
+    private void updateLikesOnServer(long userId, long couponId, TextView textView, int count, ImageButton imageButton, ProgressBar progressBar) {
+        imageButton.setVisibility(View.GONE);
+        imageButton.setClickable(false);
+        progressBar.setVisibility(View.VISIBLE);
         CouponAPI couponAPI = retrofit.create(CouponAPI.class);
         Call<Coupon> call = couponAPI.updateLikes(couponId,userId);
         call.enqueue(new Callback<Coupon>() {
             @Override
             public void onResponse(Call<Coupon> call, Response<Coupon> response) {
+                progressBar.setVisibility(View.GONE);
+                imageButton.setVisibility(View.VISIBLE);
+                imageButton.setClickable(true);
                 if(response.code()==200){
                     Coupon coupon = response.body();
                     if(coupon.getLikedBy().contains(userId)) {
@@ -283,6 +290,9 @@ public class MainOfferActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Coupon> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                imageButton.setVisibility(View.VISIBLE);
+                imageButton.setClickable(true);
                 Toast.makeText(MainOfferActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

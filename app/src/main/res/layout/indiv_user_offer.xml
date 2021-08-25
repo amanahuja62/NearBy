@@ -120,6 +120,15 @@
                         app:srcCompat="@drawable/ic_thumb_up"
                         app:tint="#FE0329" />
 
+
+                    <ProgressBar
+                        android:id="@+id/progressBar4"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="@dimen/spacing_xlarge"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:visibility="gone"
+                        android:layout_weight="0.001" />
+
                     <TextView
                         android:id="@+id/noOfLikes"
                         android:layout_width="wrap_content"
