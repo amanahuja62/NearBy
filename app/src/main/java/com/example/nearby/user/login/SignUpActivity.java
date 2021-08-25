@@ -2,7 +2,6 @@ package com.example.nearby.user.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,10 +14,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.nearby.R;
 import com.example.nearby.RegisterUserAPI;
+import com.example.nearby.model.User;
 import com.example.nearby.user.offer.MainOfferActivity;
 import com.example.nearby.utils.Tools;
-import com.example.nearby.model.User;
-import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;

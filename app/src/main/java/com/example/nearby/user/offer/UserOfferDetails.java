@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,29 +12,22 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 
 import com.example.nearby.CartAPI;
-import com.example.nearby.CouponAPI;
 import com.example.nearby.R;
 import com.example.nearby.model.Cart;
 import com.example.nearby.model.Coupon;
-import com.example.nearby.model.User;
 import com.example.nearby.user.mycart.MyCartActivity;
 import com.example.nearby.utils.Tools;
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.transition.platform.MaterialContainerTransform;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -206,11 +196,8 @@ public class UserOfferDetails extends AppCompatActivity {
             finish();
         }
         Gson gson = new Gson();
-        sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        sp.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
 
-            }
         });
         String json = sp.getString("notPurchasedCoupons", "");
         Long[] remainingCoupons = gson.fromJson(json, Long[].class);

@@ -63,33 +63,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-                startActivity(intent);
-            }
+        signup.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+            startActivity(intent);
         });
 
-        signin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s1 = username.getText().toString();
-                String s2 = password.getText().toString();
-                 if(s1.equals("") || s2.equals("")){
-                     Toast.makeText(MainActivity.this, "Invalid username or password !!", Toast.LENGTH_SHORT).show();
-                     return;
-                 }
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://nearby-backend.herokuapp.com")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                loginAPI = retrofit.create(LoginAPI.class);
+        signin.setOnClickListener(v -> {
+            String s1 = username.getText().toString();
+            String s2 = password.getText().toString();
+             if(s1.equals("") || s2.equals("")){
+                 Toast.makeText(MainActivity.this, "Invalid username or password !!", Toast.LENGTH_SHORT).show();
+                 return;
+             }
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://nearby-backend.herokuapp.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            loginAPI = retrofit.create(LoginAPI.class);
 
-                progressBar.setVisibility(View.VISIBLE);
-                validateCredentials(s1,s2);
+            progressBar.setVisibility(View.VISIBLE);
+            validateCredentials(s1,s2);
 
-            }
         });
     }
 
