@@ -105,14 +105,7 @@
 
             </LinearLayout>
 
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
+            <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_mlarge"
@@ -120,7 +113,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:textColor="@color/overlay_light_60" />
 
-                    <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/spacing_xmlarge"
                         android:layout_marginTop="@dimen/spacing_middle"
@@ -137,24 +130,14 @@
                             android:textColorHint="@color/overlay_light_40" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_mlarge"
                     android:text="Shop Name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@color/overlay_light_60" />
-
-                <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_xmlarge"
                     android:layout_marginTop="@dimen/spacing_middle"
@@ -171,7 +154,7 @@
                         android:textColorHint="@color/overlay_light_40" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
