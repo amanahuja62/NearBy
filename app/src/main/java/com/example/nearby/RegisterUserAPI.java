@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 
 public interface RegisterUserAPI {
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @POST("/api/users/register-user")
     Call<User> createUser(@Body User user);
 }

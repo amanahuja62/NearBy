@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,15 +46,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CouponRegisterActivity extends AppCompatActivity {
 
-    final static int CAMERA_REQUEST_CODE = 100;
     final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 101;
     final static int PICK_IMAGE_GALLERY = 200;
-    final static int PICK_IMAGE_CAMERA = 201;
     EditText e1,e2,e3,e4,e5,e6,e7,e8;
     TextView textView;
     CouponAPI couponAPI;
     ProgressDialog progressDialog;
-
     String imageURL;
     String imageName;
     String mode;
@@ -113,7 +111,7 @@ public class CouponRegisterActivity extends AppCompatActivity {
                              Toast.makeText(CouponRegisterActivity.this, "You have not uploaded any image", Toast.LENGTH_SHORT).show();
                              else{
                                Intent intent = new Intent(CouponRegisterActivity.this, UploadedImageActivity.class);
-                               intent.putExtra("imageuri",filepath);
+                               intent.putExtra("imageurl",imageURL);
                                startActivity(intent);
 
                               }
