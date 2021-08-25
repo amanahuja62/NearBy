@@ -15,15 +15,15 @@ import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 public interface CartAPI {
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @GET
     Call<Cart> getUserCart(@Url String url);
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @PUT("/api/cart/update-cart/{cart_id}")
     Call<Cart> updateUserCart(@Path("cart_id") long cart_id, @Body Cart cart);
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @GET("/api/cart/cart-coupons/{cartId}")
     Call<ArrayList<Coupon>> getCouponsOfCartHavingID(@Path("cartId") long cartid);
 

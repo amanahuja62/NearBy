@@ -18,32 +18,32 @@ import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 public interface CouponAPI {
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @POST("/api/coupons/create-coupon")
     Call<Coupon> postCoupon(@Body Coupon coupon);
 
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @GET("/api/coupons/all-coupons")
     Call<List<Coupon>> getAllCoupons();
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @GET
     Call<List<Coupon>> getSelectedCoupons(@Url String url);
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @PUT("/api/coupons/coupon/{id}")
     Call<Coupon> putCoupon(@Path("id") long id, @Body Coupon coupon);
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @DELETE("/api/coupons/coupon/{id}")
     Call<DeleteResponse> deleteCoupon(@Path("id") long id);
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @GET("/api/coupons/coupon/{id}")
     Call<Coupon> getCouponHavingID(@Path("id") long id);
 
-    @Headers({"Key: key","Password: password"})
+    @Headers({"key: password"} )
     @PUT("/api/coupons/update-coupon/{couponId}/{userId}")
     Call<Coupon> updateLikes(@Path("couponId")long couponId, @Path("userId")long userId);
 
