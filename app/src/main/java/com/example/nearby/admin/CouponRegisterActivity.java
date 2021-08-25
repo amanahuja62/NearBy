@@ -3,7 +3,6 @@ package com.example.nearby.admin;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +27,6 @@ import com.example.nearby.R;
 import com.example.nearby.model.Coupon;
 import com.example.nearby.utils.Tools;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
@@ -75,61 +72,48 @@ public class CouponRegisterActivity extends AppCompatActivity {
          if(mode.equals("update"))
              initialiseTextFields();
 
-        (findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        (findViewById(R.id.bt_close)).setOnClickListener(v -> finish());
 
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImagesChoiceDialog();
-            }
-        });
+        linearLayout.setOnClickListener(v -> showImagesChoiceDialog());
     }
 
     private void showImagesChoiceDialog() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(true);
-        dialog.setSingleChoiceItems(optionsForImages, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch(which){
-                    case 0: checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_REQUEST_CODE);
-                        if (isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_REQUEST_CODE)) {
-                            Intent intent = new Intent();
-                            intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_GALLERY);
-                        }
+        dialog.setSingleChoiceItems(optionsForImages, 0, (dialog1, which) -> {
+            switch(which){
+                case 0: checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_REQUEST_CODE);
+                    if (isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_GALLERY);
+                    }
+                    break;
+
+
+                case 1:  if(imageURL == null)
+                         Toast.makeText(CouponRegisterActivity.this, "You have not uploaded any image", Toast.LENGTH_SHORT).show();
+                         else{
+                           Intent intent = new Intent(CouponRegisterActivity.this, UploadedImageActivity.class);
+                           intent.putExtra("imageurl",imageURL);
+                           startActivity(intent);
+
+                          }
+                         break;
+
+                case 2: if(imageURL == null)
+                          Toast.makeText(CouponRegisterActivity.this, "You have not uploaded any image", Toast.LENGTH_SHORT).show();
+                        else
+                            deletePreviouslyUploadedImage();
+
                         break;
 
-
-                    case 1:  if(imageURL == null)
-                             Toast.makeText(CouponRegisterActivity.this, "You have not uploaded any image", Toast.LENGTH_SHORT).show();
-                             else{
-                               Intent intent = new Intent(CouponRegisterActivity.this, UploadedImageActivity.class);
-                               intent.putExtra("imageurl",imageURL);
-                               startActivity(intent);
-
-                              }
-                             break;
-
-                    case 2: if(imageURL == null)
-                              Toast.makeText(CouponRegisterActivity.this, "You have not uploaded any image", Toast.LENGTH_SHORT).show();
-                            else
-                                deletePreviouslyUploadedImage();
-
-                            break;
-
-                    default: break;
+                default: break;
 
 
-                }
-                dialog.dismiss();
             }
+            dialog1.dismiss();
         });
         dialog.show();
     }
@@ -166,22 +150,16 @@ public class CouponRegisterActivity extends AppCompatActivity {
 
     private void deletePreviouslyUploadedImage() {
         StorageReference ref = storage.getReferenceFromUrl(imageURL);
-        ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // File deleted successfully
-                imageURL = null;
-                filepath = null;
-                textView.setText("Add Coupon Image");
+        ref.delete().addOnSuccessListener(aVoid -> {
+            // File deleted successfully
+            imageURL = null;
+            filepath = null;
+            textView.setText("Add Coupon Image");
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Uh-oh, an error occurred!
-                Toast.makeText(CouponRegisterActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(exception -> {
+            // Uh-oh, an error occurred!
+            Toast.makeText(CouponRegisterActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
 
-            }
         });
     }
 
@@ -213,12 +191,9 @@ public class CouponRegisterActivity extends AppCompatActivity {
                    });
 
                }
-           }).addOnFailureListener(new OnFailureListener() {
-               @Override
-               public void onFailure(@NonNull Exception e) {
-                   Toast.makeText(CouponRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                   progressDialog.dismiss();
-               }
+           }).addOnFailureListener(e -> {
+               Toast.makeText(CouponRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+               progressDialog.dismiss();
            });
 
         }
@@ -345,7 +320,7 @@ public class CouponRegisterActivity extends AppCompatActivity {
            }
     }
 
-    private boolean isPermissionGranted(String permission, int requestCode){
+    private boolean isPermissionGranted(String permission){
         if(ContextCompat.checkSelfPermission(this,permission) != PackageManager.PERMISSION_DENIED)
             return true;
         return false;

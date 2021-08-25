@@ -9,16 +9,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,16 +29,11 @@ import com.example.nearby.R;
 import com.example.nearby.adapter.CouponAdapter;
 import com.example.nearby.model.Coupon;
 import com.example.nearby.model.DeleteResponse;
-import com.example.nearby.user.login.MainActivity;
 import com.example.nearby.utils.Tools;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,41 +70,25 @@ public class AdminMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_drawer_filter);
 
 
-        findViewById(R.id.btn_close_filter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer.closeDrawer(GravityCompat.END);
-            }
-        });
+        findViewById(R.id.btn_close_filter).setOnClickListener(v -> drawer.closeDrawer(GravityCompat.END));
 
-        findViewById(R.id.bt_filter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer.openDrawer(GravityCompat.END);
-            }
-        });
+        findViewById(R.id.bt_filter).setOnClickListener(v -> drawer.openDrawer(GravityCompat.END));
 
 
         initToolbar();
         initComponent();
 
-        cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectCity.setText(cityList.get(position));
-                cityList.clear();
-                cityAdapter.clear();
-                cityAdapter.notifyDataSetChanged();
-            }
+        cityListView.setOnItemClickListener((parent, view, position, id) -> {
+            selectCity.setText(cityList.get(position));
+            cityList.clear();
+            cityAdapter.clear();
+            cityAdapter.notifyDataSetChanged();
         });
-        areaListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectArea.setText(areaList.get(position));
-                areaList.clear();
-                areaAdapter.clear();
-                areaAdapter.notifyDataSetChanged();
-            }
+        areaListView.setOnItemClickListener((parent, view, position, id) -> {
+            selectArea.setText(areaList.get(position));
+            areaList.clear();
+            areaAdapter.clear();
+            areaAdapter.notifyDataSetChanged();
         });
         selectCity.addTextChangedListener(new TextWatcher() {
             @Override
@@ -177,65 +152,47 @@ public class AdminMainActivity extends AppCompatActivity {
 
         getEachCoupon();
         // on item list clicked
-        mAdapter.setOnItemClickListener(new CouponAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, Coupon obj, int position) {
+        mAdapter.setOnItemClickListener((view, obj, position) -> {
 
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(AdminMainActivity.this);
-                dialog.setCancelable(true);
-                dialog.setTitle("Choose an option");
-                dialog.setSingleChoiceItems(optionsForAdmin, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        switch(which){
-                            case 0 : //update the coupon // put request
-                                Intent intent = new Intent(AdminMainActivity.this,CouponRegisterActivity.class);
-                                intent.putExtra("mode","update");
-                                intent.putExtra("Coupon",obj);
-                                updationIndex = mAdapter.getItemPosition(obj);
-                                startActivityForResult(intent, UPDATE_COUPON_REQ);
-                                break;
-                            case 1 : //delete the coupon
-                                AlertDialog.Builder dialog2 = new AlertDialog.Builder(AdminMainActivity.this);
-                                dialog2.setTitle("This will Delete the coupon");
-                                dialog2.setCancelable(true);
-                                dialog2.setNegativeButton("Cancel",null);
-                                dialog2.setPositiveButton("Yes continue", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                       deleteCoupon(obj.getId(),obj);
-                                    }
-                                });
-                                dialog2.show();
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(AdminMainActivity.this);
+            dialog.setCancelable(true);
+            dialog.setTitle("Choose an option");
+            dialog.setSingleChoiceItems(optionsForAdmin, 0, (dialog1, which) -> {
+                dialog1.dismiss();
+                switch(which){
+                    case 0 : //update the coupon // put request
+                        Intent intent = new Intent(AdminMainActivity.this,CouponRegisterActivity.class);
+                        intent.putExtra("mode","update");
+                        intent.putExtra("Coupon",obj);
+                        updationIndex = mAdapter.getItemPosition(obj);
+                        startActivityForResult(intent, UPDATE_COUPON_REQ);
+                        break;
+                    case 1 : //delete the coupon
+                        AlertDialog.Builder dialog2 = new AlertDialog.Builder(AdminMainActivity.this);
+                        dialog2.setTitle("This will Delete the coupon");
+                        dialog2.setCancelable(true);
+                        dialog2.setNegativeButton("Cancel",null);
+                        dialog2.setPositiveButton("Yes continue", (dialog11, which1) -> deleteCoupon(obj.getId(),obj));
+                        dialog2.show();
 
-                                //delete request
-                                break;
-                            default: break;
-                        }
-                    }
-                });
-                dialog.show();
-            }
+                        //delete request
+                        break;
+                    default: break;
+                }
+            });
+            dialog.show();
         });
 
+        findViewById(R.id.btn_clearFilter).setOnClickListener((l)-> clearFilter());
         materialRippleLayout =findViewById(R.id.btn_apply);
-        materialRippleLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFilteredCoupons();
-                if(!selectCity.getText().toString().equals(""))
-                drawer.closeDrawer(GravityCompat.END);
-                recyclerView.setVisibility(View.INVISIBLE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                }, 500);
+        materialRippleLayout.setOnClickListener(v -> {
+            getFilteredCoupons();
+            if(!selectCity.getText().toString().equals(""))
+            drawer.closeDrawer(GravityCompat.END);
+            recyclerView.setVisibility(View.INVISIBLE);
+            new Handler().postDelayed(() -> recyclerView.setVisibility(View.VISIBLE), 500);
 
 
-            }
         });
 
 
@@ -543,4 +500,15 @@ public class AdminMainActivity extends AppCompatActivity {
         startActivity(startMain);
     }
 
+    public void clearFilter() {
+        selectArea.setText("");
+        selectCity.setText("");
+        cityList.clear();
+        cityAdapter.clear();
+        cityAdapter.notifyDataSetChanged();
+        areaList.clear();
+        areaAdapter.clear();
+        areaAdapter.notifyDataSetChanged();
+
+    }
 }

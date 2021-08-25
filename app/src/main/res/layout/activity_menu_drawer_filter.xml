@@ -219,6 +219,27 @@
                         app:fontFamily="sans-serif-medium" />
 
                 </com.balysv.materialripple.MaterialRippleLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/spacing_large" />
+
+                <com.balysv.materialripple.MaterialRippleLayout
+                    android:id="@+id/btn_clearFilter"
+                    style="@style/RippleStyleWhite"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/red_500">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="CLEAR FILTER"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        android:textColor="@android:color/white"
+                        app:fontFamily="sans-serif-medium" />
+
+                </com.balysv.materialripple.MaterialRippleLayout>
 
                 <View
                     android:layout_width="0dp"

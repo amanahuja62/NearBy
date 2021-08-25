@@ -1,10 +1,9 @@
 package com.example.nearby.admin;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.nearby.R;
 import com.example.nearby.utils.Tools;

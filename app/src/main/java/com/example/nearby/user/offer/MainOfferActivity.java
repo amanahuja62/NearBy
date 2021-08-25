@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -99,65 +98,40 @@ public class MainOfferActivity extends AppCompatActivity {
 
 
 
-        findViewById(R.id.btn_close_filter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.btn_close_filter).setOnClickListener(v -> drawer.closeDrawer(GravityCompat.END));
+        findViewById(R.id.bt_cart).setOnClickListener(v -> {
+            //open cart page
+            Intent intent = new Intent(MainOfferActivity.this, MyCartActivity.class);
+            intent.putExtra("userId",user.getId());
+            startActivity(intent);
+        });
+
+        findViewById(R.id.bt_filter).setOnClickListener(v -> drawer.openDrawer(GravityCompat.END));
+
+        materialRippleLayout.setOnClickListener(v -> {
+            getFilteredCoupons();
+            if(!selectCity.getText().toString().equals(""))
                 drawer.closeDrawer(GravityCompat.END);
-            }
-        });
-        findViewById(R.id.bt_cart).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //open cart page
-                Intent intent = new Intent(MainOfferActivity.this, MyCartActivity.class);
-                intent.putExtra("userId",user.getId());
-                startActivity(intent);
-            }
-        });
-
-        findViewById(R.id.bt_filter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer.openDrawer(GravityCompat.END);
-            }
-        });
-
-        materialRippleLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFilteredCoupons();
-                if(!selectCity.getText().toString().equals(""))
-                    drawer.closeDrawer(GravityCompat.END);
-                recyclerView.setVisibility(View.INVISIBLE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                }, 500);
+            recyclerView.setVisibility(View.INVISIBLE);
+            new Handler().postDelayed(() -> recyclerView.setVisibility(View.VISIBLE), 500);
 
 
-            }
-        });
-        cityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectCity.setText(cityList.get(position));
-                cityList.clear();
-                cityAdapter.clear();
-                cityAdapter.notifyDataSetChanged();
-            }
-        });
-        areaListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectArea.setText(areaList.get(position));
-                areaList.clear();
-                areaAdapter.clear();
-                areaAdapter.notifyDataSetChanged();
-            }
         });
 
+        cityListView.setOnItemClickListener((parent, view, position, id) -> {
+            selectCity.setText(cityList.get(position));
+            cityList.clear();
+            cityAdapter.clear();
+            cityAdapter.notifyDataSetChanged();
+        });
+        areaListView.setOnItemClickListener((parent, view, position, id) -> {
+            selectArea.setText(areaList.get(position));
+            areaList.clear();
+            areaAdapter.clear();
+            areaAdapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.clearAllfilters).setOnClickListener((l)-> clearAllfilters());
         selectCity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -217,6 +191,17 @@ public class MainOfferActivity extends AppCompatActivity {
         getEachCoupon();
     }
 
+    private void clearAllfilters() {
+        selectArea.setText("");
+        selectCity.setText("");
+        cityList.clear();
+        cityAdapter.clear();
+        cityAdapter.notifyDataSetChanged();
+        areaList.clear();
+        areaAdapter.clear();
+        areaAdapter.notifyDataSetChanged();
+    }
+
     private void initToolbar() {
         Tools.setSystemBarColor(this, R.color.blue_500);
     }
@@ -235,19 +220,11 @@ public class MainOfferActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(new UserOfferAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, Coupon obj, int position) {
-                onItemGridClicked(view, obj);
-            }
-        });
-        mAdapter.setOnLikeButtonClickListener(new UserOfferAdapter.onLikeButtonClickListener() {
-            @Override
-            public void onLikeClikced(TextView textView, Coupon obj, ImageButton imageButton, ProgressBar progressBar) {
-                int count = Integer.parseInt(textView.getText().toString());
-                updateLikesOnServer(user.getId(),obj.getId(),textView,count,imageButton,progressBar);
+        mAdapter.setOnItemClickListener((view, obj, position) -> onItemGridClicked(view, obj));
+        mAdapter.setOnLikeButtonClickListener((textView, obj, imageButton, progressBar) -> {
+            int count = Integer.parseInt(textView.getText().toString());
+            updateLikesOnServer(user.getId(),obj.getId(),textView,count,imageButton,progressBar);
 
-            }
         });
         selectCity = findViewById(R.id.selectCity);
         areaListView = findViewById(R.id.areaListView);
@@ -340,9 +317,7 @@ public class MainOfferActivity extends AppCompatActivity {
                 }
                 List<Coupon> couponList2 = response.body();
                 ArrayList<Coupon> indices = new ArrayList<>();
-                int i=-1;
                 for(Coupon coupon : couponList2) {
-                    i++;
                     if (coupon.getCount() == 0)
                         indices.add(coupon);
                 }
@@ -400,9 +375,7 @@ public class MainOfferActivity extends AppCompatActivity {
                 }
                 List<Coupon> couponList2 = response.body();
                 ArrayList<Coupon> indices = new ArrayList<>();
-                int i=-1;
                 for(Coupon coupon : couponList2) {
-                    i++;
                     if (coupon.getCount() == 0)
                         indices.add(coupon);
                 }
@@ -437,9 +410,7 @@ public class MainOfferActivity extends AppCompatActivity {
                 }
                 List<Coupon> couponList2 = response.body();
                 ArrayList<Coupon> indices = new ArrayList<>();
-                int i=-1;
                 for(Coupon coupon : couponList2) {
-                    i++;
                     if (coupon.getCount() == 0)
                         indices.add(coupon);
                 }
@@ -473,9 +444,7 @@ public class MainOfferActivity extends AppCompatActivity {
                     return;
 
                 ArrayList<Coupon> indices = new ArrayList<>();
-                int i=-1;
                 for(Coupon coupon : couponList2) {
-                    i++;
                     if (coupon.getCount() == 0)
                         indices.add(coupon);
                 }
@@ -519,9 +488,7 @@ public class MainOfferActivity extends AppCompatActivity {
                 if(couponList2 == null)
                     return;
                 ArrayList<Coupon> indices = new ArrayList<>();
-                int i=-1;
                 for(Coupon coupon : couponList2) {
-                    i++;
                     if (coupon.getCount() == 0)
                         indices.add(coupon);
                 }
