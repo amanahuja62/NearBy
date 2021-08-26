@@ -80,11 +80,12 @@
                         android:layout_weight="1"
                         android:text="20% off"
                         android:textColor="@color/grey_700"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView4"
+                        android:layout_marginLeft="2dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.001"
