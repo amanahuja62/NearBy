@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 class MainActivityTest {
 
+
     @Test
     fun test_isActivityInView(){
         val activityRule = ActivityScenario.launch(MainActivity::class.java)

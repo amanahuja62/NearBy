@@ -7,5 +7,6 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(
     MainActivityTest::class,
     SignUpActivityTest::class
+
 )
 class ActivityTestSuite

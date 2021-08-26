@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4ClassRunner::class)
 class SignUpActivityTest {
 
+
     @Before
     fun method(){
         val activityRule = ActivityScenario.launch(SignUpActivity::class.java)
