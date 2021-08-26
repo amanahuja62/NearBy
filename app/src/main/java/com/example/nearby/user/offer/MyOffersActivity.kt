@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -11,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +29,7 @@ import com.example.nearby.user.mycart.MyCartActivity
 import com.example.nearby.utils.Tools
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDate
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -101,10 +104,21 @@ class MyOffersActivity : AppCompatActivity() {
         lateinit var coupon : Coupon
 
             call.enqueue(object : Callback<Coupon> {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResponse(call: Call<Coupon>, response: Response<Coupon>) {
                     if(response.code()==200) {
                         coupon = response.body()!!
-                        indivOfferList.add(IndivOfferPurchased(coupon, address, transactionDate))
+                        var i : Int =0
+                        val dateOfTranscation = LocalDate.parse(transactionDate)
+                        for(indivOffer in indivOfferList){
+                            val date = LocalDate.parse(indivOffer.transactionDate)
+                               if(dateOfTranscation.isAfter(date)){
+                                    break
+                                }
+                            i++
+
+                        }
+                        indivOfferList.add(i,IndivOfferPurchased(coupon, address, transactionDate))
                         Log.d("abcdeff", "${indivOfferList.size.toString()}")
                         myOfferAdapter.setData(indivOfferList)
                         progressDialog.dismiss()
