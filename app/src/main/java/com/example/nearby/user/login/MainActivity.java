@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor prefsEditor = sp.edit();
             Gson gson = new Gson();
             String json = gson.toJson(user1);
-            prefsEditor.putString("userDetails",json);
-            prefsEditor.commit();
+            prefsEditor.putString("userDetails",json).apply();
+            prefsEditor.apply();
             startActivity(intent);
 
         }

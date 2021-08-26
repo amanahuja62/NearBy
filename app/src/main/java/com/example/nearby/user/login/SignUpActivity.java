@@ -1,6 +1,7 @@
 package com.example.nearby.user.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import com.example.nearby.RegisterUserAPI;
 import com.example.nearby.model.User;
 import com.example.nearby.user.offer.MainOfferActivity;
 import com.example.nearby.utils.Tools;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText e1,e2,e3,e4,e6;
     Boolean  var2, var3;
     ProgressBar loadingPB;
-
+    SharedPreferences sp;
     private RegisterUserAPI registerUserAPI;
 
     @Override
@@ -57,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
         e4 = findViewById(R.id.email);
         e6 = findViewById(R.id.username);
         loadingPB = findViewById(R.id.progressBar);
+        sp = getSharedPreferences("users",MODE_PRIVATE);
 
     }
 
@@ -168,6 +171,11 @@ public class SignUpActivity extends AppCompatActivity {
                 loadingPB.setVisibility(View.GONE);
                 User userPostResponse = response.body();
                 Intent intent = new Intent(SignUpActivity.this, MainOfferActivity.class);
+                sp.edit().putBoolean("logged",true).apply();
+                Gson gson = new Gson();
+                String json = gson.toJson(userPostResponse);
+                sp.edit().putString("userDetails",json).apply();
+                sp.edit().apply();
                 intent.putExtra("userDetails",userPostResponse);
                 startActivity(intent);
                 finish();

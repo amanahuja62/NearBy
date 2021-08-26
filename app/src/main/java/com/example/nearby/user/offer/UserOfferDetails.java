@@ -192,7 +192,7 @@ public class UserOfferDetails extends AppCompatActivity {
 
         if(sp.getString("purchased","no").equals("yes")){
             //user has purchased, cart is destroyed
-            sp.edit().putString("purchased","no");
+            sp.edit().putString("purchased","no").apply();
             finish();
         }
         Gson gson = new Gson();

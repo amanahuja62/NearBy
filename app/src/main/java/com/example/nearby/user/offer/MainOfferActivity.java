@@ -204,6 +204,7 @@ public class MainOfferActivity extends AppCompatActivity {
 
     private void initToolbar() {
         Tools.setSystemBarColor(this, R.color.blue_500);
+        Toast.makeText(this, "Hi " + user.getName(), Toast.LENGTH_SHORT).show();
     }
 
     private void initComponent() {
