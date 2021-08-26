@@ -74,13 +74,16 @@ class CheckoutActivity : AppCompatActivity() {
         materialRippleLayout = findViewById(R.id.submit)
         recyclerView.adapter = mAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        sp = getSharedPreferences("users", MODE_PRIVATE)
-
-
-        val gson = Gson()
-        val json = sp.getString("userDetails", "")
-        Thread.sleep(50)
-        obj = gson.fromJson(json,User::class.java)
+        try {
+            sp = getSharedPreferences("users", MODE_PRIVATE)
+            val gson = Gson()
+            val json = sp.getString("userDetails", "")
+            Thread.sleep(50)
+            obj = gson.fromJson(json, User::class.java)
+        }
+        catch (e : Exception){
+            finish()
+        }
         totalPrice = findViewById(R.id.totalprice)
         couponsList = intent.getSerializableExtra("couponsList") as ArrayList<Coupon>
         totalPrice.text = intent.getLongExtra("totalPrice",100).toString()
