@@ -79,6 +79,7 @@ class CheckoutActivity : AppCompatActivity() {
 
         val gson = Gson()
         val json = sp.getString("userDetails", "")
+        Thread.sleep(50)
         obj = gson.fromJson(json,User::class.java)
         totalPrice = findViewById(R.id.totalprice)
         couponsList = intent.getSerializableExtra("couponsList") as ArrayList<Coupon>
