@@ -65,6 +65,10 @@ class MyOffersActivity : AppCompatActivity() {
                  if(response.code()==200){
                      indivOfferList = ArrayList<IndivOfferPurchased>()
                      val myOffersList = response.body()!!
+                     if(myOffersList.size == 0){
+                         progressDialog.dismiss()
+                         Toast.makeText(this@MyOffersActivity,"You have not ordered anything yet",Toast.LENGTH_LONG).show()
+                     }
                      for(myOffer in myOffersList){
                          for(id in myOffer.coupons)
                              addOfferAvailedDetailsToList(id,myOffer.address,myOffer.transactionDate)
